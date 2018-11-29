@@ -32,4 +32,14 @@ app.get("/api/genres/:id", (req, res) => {
   res.send(genre);
 });
 
+// MAKING POST REQUEST
+app.post("/api/genres", (req, res) => {
+  const genre = {
+    id: genres.length + 1,
+    name: req.body.name
+  };
+  genres.push(genre);
+  res.send(genre);
+});
+
 app.listen(3000, () => console.log("Listening to port 3000..."));
