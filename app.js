@@ -80,6 +80,28 @@ app.put("/api/genres/:id", (req, res) => {
   res.send(genre);
 });
 
+//  HANDLING DELETE REQUEST
+app.delete("/api/genres/:id", (req, res) => {
+  // Look up the genre
+  // If not existing return 404
+  const genre = genres.find(g => g.id === parseInt(req.params.id));
+  if (!genre) {
+    // BAD REQUEST
+    res
+      .status(404)
+      .send("The requested genre is not available in our database records");
+    return;
+  }
+  res.send(genre);
+
+  // Delete
+  const index = genres.indexOf(genre);
+  genres.splice(index, 1);
+
+  // return response
+  res.send(genre);
+});
+
 function validateGenre(course) {
   const schema = {
     name: Joi.string()
