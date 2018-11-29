@@ -24,13 +24,10 @@ app.get("/api/genres", (req, res) => {
 // GET SINGLE GENRE
 app.get("/api/genres/:id", (req, res) => {
   const genre = genres.find(g => g.id === parseInt(req.params.id));
-  if (!genre) {
-    // BAD REQUEST
-    res
+  if (!genre)
+    return res
       .status(400)
       .send("The requested genre is not available in our database records");
-    return;
-  }
   res.send(genre);
 });
 
@@ -39,10 +36,7 @@ app.post("/api/genres", (req, res) => {
   // VALIDATION WITH JOI
   const { error } = validateGenre(req.body);
 
-  if (error) {
-    res.status(400).send(error.details[0].message);
-    return;
-  }
+  if (error) return res.status(400).send(error.details[0].message);
 
   const genre = {
     id: genres.length + 1,
@@ -57,22 +51,17 @@ app.put("/api/genres/:id", (req, res) => {
   // Look up for genre
   // If not existing, return 404
   const genre = genres.find(g => g.id === parseInt(req.params.id));
-  if (!genre) {
-    // BAD REQUEST
-    res
+  if (!genre)
+    return res
       .status(404)
       .send("The requested genre is not available in our database records");
-    return;
-  }
+
   res.send(genre);
   // Validate
   // If invalid, return 400 - Bad request
   const { error } = validateGenre(req.body);
 
-  if (error) {
-    res.status(400).send(error.details[0].message);
-    return;
-  }
+  if (error) return res.status(400).send(error.details[0].message);
 
   // If valid, update course
   genre.name = req.body.name;
@@ -85,13 +74,10 @@ app.delete("/api/genres/:id", (req, res) => {
   // Look up the genre
   // If not existing return 404
   const genre = genres.find(g => g.id === parseInt(req.params.id));
-  if (!genre) {
-    // BAD REQUEST
-    res
+  if (!genre)
+    return res
       .status(404)
       .send("The requested genre is not available in our database records");
-    return;
-  }
   res.send(genre);
 
   // Delete
