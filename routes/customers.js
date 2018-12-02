@@ -1,31 +1,6 @@
-const mongoose = require("mongoose");
 const express = require("express");
 const Router = express.Router();
-const Joi = require("joi");
-
-// SCHEMA
-const customerSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    minlength: 5,
-    maxlength: 50
-  },
-  isGold: {
-    type: Boolean,
-    default: false
-  },
-  phone: {
-    type: String,
-    required: true,
-    minlength: 5,
-    maxlength: 50
-  }
-});
-
-// MODEL
-const Customer = mongoose.model("Customer", customerSchema);
-
+const { Customer, validate } = require("../models/customer");
 // GET ALL GENRES
 Router.get("/", async (req, res) => {
   const customers = await Customer.find().sort("name");
@@ -46,7 +21,7 @@ Router.get("/", async (req, res) => {
 // MAKING POST REQUEST
 Router.post("/", async (req, res) => {
   // VALIDATION WITH JOI
-  const { error } = validateCustomer(req.body);
+  const { error } = validate(req.body);
 
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -63,7 +38,7 @@ Router.post("/", async (req, res) => {
 Router.put("/:id", async (req, res) => {
   // Validate
   // If invalid, return 400 - Bad request
-  const { error } = validateCustomer(req.body);
+  const { error } = validate(req.body);
 
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -96,21 +71,5 @@ Router.delete("/:id", async (req, res) => {
   // return response
   res.send(customer);
 });
-
-function validateCustomer(customer) {
-  const schema = {
-    name: Joi.string()
-      .min(5)
-      .max(50)
-      .required(),
-    phone: Joi.string()
-      .min(5)
-      .max(50)
-      .required(),
-    isGold: Joi.boolean()
-  };
-
-  return Joi.validate(customer, schema);
-}
 
 module.exports = Router;
