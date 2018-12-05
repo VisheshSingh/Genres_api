@@ -9,7 +9,7 @@ Router.get("/", async (req, res) => {
 });
 
 // GET SINGLE GENRE
-Router.get("/", async (req, res) => {
+Router.get("/:id", async (req, res) => {
   const genre = await Genre.findById(req.params.id);
   if (!genre)
     return res
